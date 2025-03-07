@@ -1,11 +1,10 @@
 import { Box, Button, Chip, Typography } from "@mui/material";
 import TaskNavigation from "./components/TaskNavigation";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useAuth } from "../auth/AuthProvider";
 import ActionsTableComponent from "./components/ActionsTableComponent";
 import { NavLink } from "react-router";
+import { useFetchTasks } from "./hooks/useFetchTasks";
+import { useDeleteTask } from "./hooks/useDeleteTask";
 
 export default function Index() {
     const columns: GridColDef<(typeof rows)[]>[] = [
@@ -48,49 +47,8 @@ export default function Index() {
       },
     ];
 
-    const [rows, setRows] = useState();
-
-    const auth = useAuth();
-    
-    const fetchTasks = async () => {
-      const URL = import.meta.env.VITE_URL_BACKEND;
-
-      await axios.get(`${URL}/tasks`, {
-          headers: {
-            Authorization: `Bearer ${auth.getToken()}`
-          }
-      })
-        .then((response) => response.data)
-        .then((data) => {
-          console.log(data);
-          setRows(data.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-    
-    useEffect(() => {
-      fetchTasks();
-    }, []);
-
-    const onDeleteTask = async (id: number) => {
-      const URL = import.meta.env.VITE_URL_BACKEND;
-
-      await axios
-        .delete(`${URL}/tasks/${id}`)
-        .then((response) => response.data)
-        .then((data) => {
-          console.log(data);
-          fetchTasks();
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => {
-          console.log("Task deleted");
-        });
-    };
+    const { rows, isLoading } = useFetchTasks();
+    const {onDeleteTask} = useDeleteTask();
 
     return (
       <div>
@@ -115,6 +73,7 @@ export default function Index() {
             }}
             pageSizeOptions={[5]}
             disableRowSelectionOnClick
+            loading={isLoading}
           />
         </Box>
       </div>

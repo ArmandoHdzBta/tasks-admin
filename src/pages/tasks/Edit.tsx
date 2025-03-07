@@ -22,6 +22,7 @@ export default function Edit() {
           .then((response) => {
             console.log(response);
             setData({
+              id: response.data.id,
               name: response.data.name,
               description: response.data.description,
               completed: response.data.completed,
@@ -39,11 +40,10 @@ export default function Edit() {
 
     const onSubmitEditTask = (data: EditTaskDto) =>{
         const URL = import.meta.env.VITE_URL_BACKEND;
-        const newData = {...data, id: parseInt(id)};
-        console.log(newData);
         setLoading(true);
-
-        axios.patch(`${URL}/tasks/${id}`, newData)
+        console.log("Edit: ", data);
+        
+        axios.patch(`${URL}/tasks/${id}`, data)
             .then(response => response.data)
             .then(data => {
                 console.log(data);
@@ -57,16 +57,27 @@ export default function Edit() {
 
     }
 
-    return (
-      <div>
-        <TaskNavigation>
-          <Link component={NavLink} underline="hover" color="inherit" to="/task">
-            Index
-          </Link>
-          <Typography sx={{ color: "text.primary" }}>Edit: {id}</Typography>
-        </TaskNavigation>
+    if (!data) return <h1>Cargando...</h1> 
+      return (
+        <div>
+          <TaskNavigation>
+            <Link
+              component={NavLink}
+              underline="hover"
+              color="inherit"
+              to="/task"
+            >
+              Index
+            </Link>
+            <Typography sx={{ color: "text.primary" }}>Edit: {id}</Typography>
+          </TaskNavigation>
 
-        <FormTask onSubmitForm={onSubmitEditTask} defaults={ data } loading={loading} />
-      </div>
-    );
+          <FormTask
+            isEdit
+            onSubmitForm={onSubmitEditTask}
+            defaults={data}
+            loading={loading}
+          />
+        </div>
+      );
 }

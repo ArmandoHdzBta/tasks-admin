@@ -11,6 +11,7 @@ const AuthContext = createContext({
   Auth: (userdata: any) => {},
 });
 
+
 export function AuthProvider({ children }: AuthProviderProps) {
     const [ isAuthenticated, setIsAuthenticated ] = useState(false);
     const [ token, setToken ] = useState(null);
