@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { TaskService } from "../services/TaksService";
+import { useTask } from "./useTask";
+import { useTasksContext } from "../contexts/TaskProvider";
 
 export const useFetchTasks = () => {
-    const [rows, setRows] = useState();
-    const [isLoading, setIsLoading] = useState(true);
+    const {setRows, setIsLoading, rows, isLoading} = useTask()
 
     const {getTasks} = TaskService();
 
@@ -12,9 +13,11 @@ export const useFetchTasks = () => {
       
     };
 
+    const task = useTasksContext()
+
     useEffect(() => {
       fetchTasks();
-    }, []);
+    }, [task.rePrint]);
 
     return { rows, isLoading, fetchTasks };
 }

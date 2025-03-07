@@ -16,6 +16,7 @@ import Login from "./pages/auth/Login";
 import ProtectedProvider from "./pages/auth/ProtectedProvider";
 import Singup from "./pages/auth/Singup";
 import { AuthProvider } from "./pages/auth/AuthProvider";
+import { TaskProvider } from "./pages/tasks/contexts/TaskProvider";
 
 createRoot(document.getElementById("root")!).render(
   <AuthProvider>
